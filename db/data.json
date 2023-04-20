@@ -1,12 +1,28 @@
 {
-	"data": [
-		{
-			"id": 1,
-			"name": "Przykładowe zadanie",
-			"time": 0,
-			"isRunning": false,
-			"isDone": false,
-			"isRemoved": false
-		}
-	]
+  "data": [
+    {
+      "name": "Zadanie do API",
+      "time": 24,
+      "isRunning": false,
+      "isDone": false,
+      "isRemoved": false,
+      "id": 2
+    },
+    {
+      "name": "Zadanie 3",
+      "time": 5,
+      "isRunning": false,
+      "isDone": false,
+      "isRemoved": false,
+      "id": 3
+    },
+    {
+      "name": "Nowe Zadanko",
+      "time": 0,
+      "isRunning": false,
+      "isDone": false,
+      "isRemoved": false,
+      "id": 4
+    }
+  ]
 }

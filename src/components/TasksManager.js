@@ -25,7 +25,7 @@ class TasksManager extends React.Component {
 			<>
 				<h1 onClick={this.onClick}>TasksManager</h1>
 				<section>
-					<form onSubmit={this.submitHandler}>
+					<form onSubmit={this.handleSubmit}>
 						<label>Nazwa: </label>
 						<input
 							name='task'
@@ -41,6 +41,32 @@ class TasksManager extends React.Component {
 		);
 	}
 
+	renderTasksList() {
+		const { tasks } = this.state;
+		return tasks.map((task) => {
+			return (
+				<section>
+					<header>
+						{task.name}, {task.time + ' sec'}
+					</header>
+					<footer>
+						<button onClick={() => this.handleStartStop(task.id)}>
+							start/stop
+						</button>
+						<button onClick={() => this.handleFinish(task.id)}>
+							zakończone
+						</button>
+						<button
+							onClick={() => this.handleRemove(task.id)}
+							disabled={true}>
+							usuń
+						</button>
+					</footer>
+				</section>
+			);
+		});
+	}
+
 	onClick = () => {
 		const { tasks } = this.state;
 		console.log(tasks);
@@ -53,23 +79,7 @@ class TasksManager extends React.Component {
 		});
 	};
 
-	renderTasksList() {
-		const { tasks } = this.state;
-		return tasks.map((task) => {
-			return (
-				<section>
-					<header>{task.name}, 00:00:00</header>
-					<footer>
-						<button>start/stop</button>
-						<button>zakończone</button>
-						<button disabled='true'>usuń</button>
-					</footer>
-				</section>
-			);
-		});
-	}
-
-	submitHandler = (e) => {
+	handleSubmit = (e) => {
 		e.preventDefault();
 
 		const { task } = this.state;
@@ -91,17 +101,85 @@ class TasksManager extends React.Component {
 
 		this.api.addData(data).then((resp) => {
 			if (resp.id) {
-				this.addTaskToState(resp);
+				const newTask = resp;
+				this.setState((state) => {
+					return {
+						tasks: [...state.tasks, newTask],
+					};
+				});
 			}
 		});
 	}
 
-	addTaskToState(task) {
-		const newItem = task;
+	handleStartStop(id) {
+		const task = this.state.tasks.map((task) => {
+			if (task.id === id) {
+				const { isRunning } = task;
 
+				if (!isRunning) {
+					this.api.updateData(id, { ...task, isRunning: true }).then((resp) => {
+						if (resp) {
+							this.changeState(id, { isRunning: true });
+						}
+					});
+				} else {
+					this.api
+						.updateData(id, { ...task, isRunning: false })
+						.then((resp) => {
+							if (resp) {
+								this.changeState(id, { isRunning: false });
+							}
+						});
+				}
+			}
+
+		});
+	}
+
+	handleFinish(id) {
+		const task = this.state.tasks.map((task) => {
+			if (task.id === id) {
+				const { isRunning } = task;
+
+				if (!isRunning) {
+					this.api.updateData(id, { ...task, isDone: true }).then((resp) => {
+						if (resp) {
+							this.changeState(id, { isDone: true });
+						}
+					});
+				}
+			}
+		});
+
+	}
+
+	handleRemove(id) {
+		const task = this.state.tasks.map((task) => {
+			if (task.id === id) {
+				const { isDone } = task;
+
+				if (isDone) {
+					this.api.updateData(id, { ...task, isRemoved: true }).then((resp) => {
+						if (resp) {
+							this.changeState(id, { isRemoved: true });
+						}
+					});
+				}
+			}
+		});
+	}
+
+	changeState(id, propertyToChange) {
 		this.setState((state) => {
+			const newTasks = state.tasks.map((task) => {
+				if (task.id === id) {
+					return { ...task, ...propertyToChange };
+				}
+				return task;
+			});
+
 			return {
-				tasks: [...state.tasks, newItem],
+				tasks: newTasks,
 			};
 		});
 	}
