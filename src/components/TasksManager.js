@@ -29,22 +29,38 @@ class TasksManager extends React.Component {
 
 	render() {
 		return (
-			<>
-				<h1 onClick={this.onClick}>TasksManager</h1>
-				<section>
-					<form onSubmit={this.handleSubmit}>
-						<label>Nazwa: </label>
+			<section className='tasks-manager'>
+				<div className='tasks-manager__container container'>
+					<header className='tasks-manager__header'>
+						<h1
+							className='tasks-manager__title'
+							onClick={this.onClick}>
+							TasksManager
+						</h1>
+					</header>
+
+					<form
+						className='tasks-manager__form form'
+						onSubmit={this.handleSubmit}>
+						<label className='form__label'>Nazwa: </label>
 						<input
+							className='form__input'
 							name='task'
 							value={this.state.task}
 							onChange={this.inputChange}
 						/>
 
-						<input type='submit' />
+						<input
+							className='form__submit-btn'
+							type='submit'
+						/>
 					</form>
-					<ul> {this.renderTasksList()}</ul>
-				</section>
-			</>
+
+					<section className='tasks-manager__tasks tasks'>
+						<ul className='tasks__list'> {this.renderTasksList()}</ul>
+					</section>
+				</div>
+			</section>
 		);
 	}
 
@@ -52,18 +68,24 @@ class TasksManager extends React.Component {
 		const { tasks } = this.state;
 		return tasks.map((task) => {
 			return (
-				<section>
-					<header>
-						{task.name}, {this.convertTime(task.time)}
+				<li className='tasks__item task'>
+					<header className='task__header'>
+						<h3 className='task__title'>{task.name}</h3>
+						<p className='task__time'>{this.convertTime(task.time)}</p>
 					</header>
-					<footer>
-						<button onClick={() => this.handleStartStop(task.id)}>
+					<footer className='task__footer'>
+						<button
+							className='task__btn task__btn--start-stop'
+							onClick={() => this.handleStartStop(task.id)}>
 							start/stop
 						</button>
-						<button onClick={() => this.handleFinish(task.id)}>
+						<button
+							className='task__btn task__btn--finish'
+							onClick={() => this.handleFinish(task.id)}>
 							zakończone
 						</button>
 						<button
+							className='task__btn task__btn--remove'
 							onClick={() => {
 								this.handleRemove(task.id);
 							}}
@@ -71,7 +93,7 @@ class TasksManager extends React.Component {
 							usuń
 						</button>
 					</footer>
-				</section>
+				</li>
 			);
 		});
 	}
