@@ -19,7 +19,12 @@ class TasksManager extends React.Component {
 				tasks: data,
 			});
 			this.sortTasks(data);
+			this.hideDeletedTasks();
 		});
+	}
+
+	componentWillUnmount() {
+		this.stopIncrementTime();
 	}
 
 	render() {
@@ -49,7 +54,7 @@ class TasksManager extends React.Component {
 			return (
 				<section>
 					<header>
-						{task.name}, {task.time + ' sec'}
+						{task.name}, {this.convertTime(task.time)}
 					</header>
 					<footer>
 						<button onClick={() => this.handleStartStop(task.id)}>
@@ -59,8 +64,10 @@ class TasksManager extends React.Component {
 							zakończone
 						</button>
 						<button
-							onClick={() => this.handleRemove(task.id)}
-							disabled={true}>
+							onClick={() => {
+								this.handleRemove(task.id);
+							}}
+							disabled={!task.isDone}>
 							usuń
 						</button>
 					</footer>
@@ -68,18 +75,6 @@ class TasksManager extends React.Component {
 			);
 		});
 	}
-
-	onClick = () => {
-		const { tasks } = this.state;
-		console.log(tasks);
-	};
-
-	inputChange = (e) => {
-		const { name, value } = e.target;
-		this.setState({
-			[name]: value,
-		});
-	};
 
 	handleSubmit = (e) => {
 		e.preventDefault();
@@ -116,56 +111,28 @@ class TasksManager extends React.Component {
 	handleStartStop(id) {
 		this.state.tasks.map((task) => {
 			if (task.id === id) {
-				const { isRunning } = task;
+				const { isRunning, isDone } = task;
 
-				if (!isRunning) {
-					this.api.updateData(id, { ...task, isRunning: true }).then((resp) => {
-						if (resp) {
-							this.incrementTime(id, task);
-							this.changeState(id, { isRunning: true });
-						}
-					});
-				} else {
-					this.api
-						.updateData(id, { ...task, isRunning: false })
-						.then((resp) => {
-							if (resp) {
-								this.stopIncrementTime();
-								this.changeState(id, { isRunning: false });
-							}
-						});
-				}
-			}
-		});
-	}
-
-	handleFinish(id) {
-		this.state.tasks.map((task) => {
-			if (task.id === id) {
-				const { isRunning } = task;
-
-				if (!isRunning) {
-					this.api.updateData(id, { ...task, isDone: true }).then((resp) => {
-						if (resp) {
-							this.changeState(id, { isDone: true });
-						}
-					});
-				}
-			}
-		});
-	}
-
-	handleRemove(id) {
-		this.state.tasks.map((task) => {
-			if (task.id === id) {
-				const { isDone } = task;
-
-				if (isDone) {
-					this.api.updateData(id, { ...task, isRemoved: true }).then((resp) => {
-						if (resp) {
-							this.changeState(id, { isRemoved: true });
-						}
-					});
+				if (!isDone) {
+					if (!isRunning) {
+						this.api
+							.updateData(id, { ...task, isRunning: true })
+							.then((resp) => {
+								if (resp) {
+									this.incrementTime(id, task);
+									this.changeState(id, { isRunning: true });
+								}
+							});
+					} else {
+						this.api
+							.updateData(id, { ...task, isRunning: false })
+							.then((resp) => {
+								if (resp) {
+									this.stopIncrementTime();
+									this.changeState(id, { isRunning: false });
+								}
+							});
+					}
 				}
 			}
 		});
@@ -197,10 +164,88 @@ class TasksManager extends React.Component {
 		clearInterval(this.intervalId);
 	}
 
+	handleFinish(id) {
+		this.state.tasks.map((task) => {
+			if (task.id === id) {
+				this.api
+					.updateData(id, { ...task, isDone: true, isRunning: false })
+					.then((resp) => {
+						if (resp) {
+							this.changeState(id, { isDone: true, isRunning: false });
+							this.stopIncrementTime();
+						}
+					});
+			}
+		});
+	}
+
+	handleRemove(id) {
+		this.state.tasks.map((task) => {
+			if (task.id === id) {
+				const { isDone } = task;
+
+				if (isDone) {
+					this.api.updateData(id, { ...task, isRemoved: true }).then((resp) => {
+						if (resp) {
+							this.changeState(id, { isRemoved: true });
+							this.hideDeletedTasks();
+						}
+					});
+				}
+			}
+		});
+	}
+
+	hideDeletedTasks() {
+		this.setState((state) => {
+			const newTasks = state.tasks.filter((task) => {
+				if (!task.isRemoved) {
+					return task;
+				}
+			});
+
+			return {
+				tasks: newTasks,
+			};
+		});
+	}
+
+	onClick = () => {
+		const { tasks } = this.state;
+		console.log(tasks);
+	};
+
+	inputChange = (e) => {
+		const { name, value } = e.target;
+		this.setState({
+			[name]: value,
+		});
+	};
+
 	sortTasks(tasksArr) {
 		tasksArr.sort((a, b) => {
 			return a.isDone - b.isDone;
 		});
+	}
+
+	convertTime(time) {
+		let hours = Math.floor(time / 3600);
+		let minutes = Math.floor((time - hours * 3600) / 60);
+		let seconds = time % 60;
+
+		if (seconds < 10) {
+			seconds = '0' + seconds;
+		}
+
+		if (minutes < 10) {
+			minutes = '0' + minutes;
+		}
+
+		if (hours < 10) {
+			hours = '0' + hours;
+		}
+
+		return `${hours}:${minutes}:${seconds}`;
 	}
 
 	changeState(id, propertyToChange) {
