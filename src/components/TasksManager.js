@@ -10,6 +10,7 @@ class TasksManager extends React.Component {
 	state = {
 		tasks: [],
 		task: '',
+		intervalId: '',
 	};
 
 	componentDidMount() {
@@ -17,6 +18,7 @@ class TasksManager extends React.Component {
 			this.setState({
 				tasks: data,
 			});
+			this.sortTasks(data);
 		});
 	}
 
@@ -112,13 +114,14 @@ class TasksManager extends React.Component {
 	}
 
 	handleStartStop(id) {
-		const task = this.state.tasks.map((task) => {
+		this.state.tasks.map((task) => {
 			if (task.id === id) {
 				const { isRunning } = task;
 
 				if (!isRunning) {
 					this.api.updateData(id, { ...task, isRunning: true }).then((resp) => {
 						if (resp) {
+							this.incrementTime(id, task);
 							this.changeState(id, { isRunning: true });
 						}
 					});
@@ -127,17 +130,17 @@ class TasksManager extends React.Component {
 						.updateData(id, { ...task, isRunning: false })
 						.then((resp) => {
 							if (resp) {
+								this.stopIncrementTime();
 								this.changeState(id, { isRunning: false });
 							}
 						});
 				}
 			}
-
 		});
 	}
 
 	handleFinish(id) {
-		const task = this.state.tasks.map((task) => {
+		this.state.tasks.map((task) => {
 			if (task.id === id) {
 				const { isRunning } = task;
 
@@ -150,11 +153,10 @@ class TasksManager extends React.Component {
 				}
 			}
 		});
-
 	}
 
 	handleRemove(id) {
-		const task = this.state.tasks.map((task) => {
+		this.state.tasks.map((task) => {
 			if (task.id === id) {
 				const { isDone } = task;
 
@@ -169,6 +171,38 @@ class TasksManager extends React.Component {
 		});
 	}
 
+	incrementTime(id, task) {
+		const { isDone } = task;
+
+		if (!isDone) {
+			this.intervalId = setInterval(() => {
+				this.setState((state) => {
+					const newTasks = state.tasks.map((task) => {
+						if (task.id === id) {
+							return { ...task, time: task.time + 1 };
+						}
+
+						return task;
+					});
+
+					return {
+						tasks: newTasks,
+					};
+				});
+			}, 1000);
+		}
+	}
+
+	stopIncrementTime() {
+		clearInterval(this.intervalId);
+	}
+
+	sortTasks(tasksArr) {
+		tasksArr.sort((a, b) => {
+			return a.isDone - b.isDone;
+		});
+	}
+
 	changeState(id, propertyToChange) {
 		this.setState((state) => {
 			const newTasks = state.tasks.map((task) => {
@@ -177,6 +211,8 @@ class TasksManager extends React.Component {
 				}
 				return task;
 			});
+
+			this.sortTasks(newTasks);
 
 			return {
 				tasks: newTasks,
