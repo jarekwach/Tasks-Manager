@@ -1,28 +1,22 @@
 @import url("https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap");
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
-
 :root {
   font-size: 62.5%;
   --color-white: #fafafa;
-  --color-dark: #001b2b;
   --color-primary: #005a7b;
   --color-secondary: #0088ae;
-  --color-shadow: rgba(0, 0, 0, 0.5);
+  --color-btn: #c5e0e0;
+  --color-shadow: rgba(0, 0, 0, 0.6);
 }
 
 body {
-  height: 100%;
+  min-height: 100vh;
   font-family: "Lato", sans-serif;
   background-color: #f9fcff;
   background-image: linear-gradient(147deg, #f9fcff 0%, #dee4ea 74%);
 }
 
 .tasks-manager__container {
-  width: 1200px;
+  max-width: 1200px;
   margin: 0 auto;
 }
 .tasks-manager__header {
@@ -65,9 +59,9 @@ body {
   padding: 0.7em 2em;
   border: none;
   border-radius: 0.5em;
-  box-shadow: 0 0 5px black;
+  box-shadow: 0 0 5px var(--color-shadow);
   transition: all 0.3s;
-  background-color: var(--color-white);
+  background-color: var(--color-btn);
 }
 .form__submit-btn:hover {
   background-color: var(--color-secondary);
@@ -75,8 +69,6 @@ body {
 }
 
 .tasks {
-  height: -moz-max-content;
-  height: max-content;
   margin: 2.2em;
 }
 .tasks__list {
@@ -88,7 +80,7 @@ body {
   margin: 2em;
   padding: 2em;
   background-color: #fff;
-  width: calc(50% - 4em);
+  min-width: calc(50% - 4em);
   border-radius: 8px;
   box-shadow: 0 0 15px var(--color-shadow);
 }
@@ -114,10 +106,15 @@ body {
 .task__btn {
   border: none;
   border-radius: 15px;
-  margin: 1.1em;
-  padding: 1em 2em;
+  margin: 1em;
+  padding: 0.7em 2em;
   font-size: 1.8em;
   transition: all 0.3s;
+  background-color: var(--color-btn);
+  box-shadow: 0 0 8px var(--color-shadow);
+}
+.task__btn:disabled {
+  cursor: not-allowed;
 }
 .task__btn:hover:not(:disabled) {
   transform: scale(1.05);
@@ -133,7 +130,10 @@ body {
   background-color: var(--color-primary);
   color: var(--color-white);
 }
+.task__btn--finished {
+  color: #ff6347;
+}
 .task__btn--remove:hover:not(:disabled) {
-  background-color: tomato;
+  background-color: #ff6347;
   color: var(--color-white);
 }/*# sourceMappingURL=main.css.map */

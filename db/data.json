@@ -1,36 +1,36 @@
 {
-  "data": [
-    {
-      "name": "Zadanie 1",
-      "time": 329,
-      "isRunning": false,
-      "isDone": false,
-      "isRemoved": false,
-      "id": 1
-    },
-    {
-      "name": "Zadanie 2",
-      "time": 182,
-      "isRunning": false,
-      "isDone": false,
-      "isRemoved": false,
-      "id": 2
-    },
-    {
-      "name": "Zadanie 3",
-      "time": 23,
-      "isRunning": false,
-      "isDone": false,
-      "isRemoved": false,
-      "id": 3
-    },
-    {
-      "name": "Zadanie 4",
-      "time": 18,
-      "isRunning": false,
-      "isDone": true,
-      "isRemoved": false,
-      "id": 4
-    }
-  ]
+	"data": [
+		{
+			"name": "Zadanie 1",
+			"time": 140,
+			"isRunning": false,
+			"isDone": false,
+			"isRemoved": false,
+			"id": 1
+		},
+		{
+			"name": "Zadanie 2",
+			"time": 10,
+			"isRunning": false,
+			"isDone": false,
+			"isRemoved": false,
+			"id": 2
+		},
+		{
+			"name": "Zadanie 3",
+			"time": 66,
+			"isRunning": false,
+			"isDone": false,
+			"isRemoved": false,
+			"id": 3
+		},
+		{
+			"name": "Zadanie 4",
+			"time": 1,
+			"isRunning": false,
+			"isDone": false,
+			"isRemoved": false,
+			"id": 4
+		}
+	]
 }
