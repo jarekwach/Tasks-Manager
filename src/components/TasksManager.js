@@ -5,20 +5,21 @@ class TasksManager extends React.Component {
 	constructor() {
 		super();
 		this.api = new API();
+		this.intervalId = '';
 	}
 
 	state = {
 		tasks: [],
 		task: '',
-		intervalId: '',
 	};
 
 	componentDidMount() {
-		this.api.loadData().then((data) => {
+		this.api.load().then((data) => {
+			this.sortTasks(data);
+
 			this.setState({
 				tasks: data,
 			});
-			this.sortTasks(data);
 			this.hideDeletedTasks();
 		});
 	}
@@ -32,7 +33,7 @@ class TasksManager extends React.Component {
 			<section className='tasks-manager'>
 				<div className='tasks-manager__container container'>
 					<header className='tasks-manager__header'>
-					<i className='tasks-manager__ico fa-solid fa-list-check'></i>
+						<i className='tasks-manager__ico fa-solid fa-list-check'></i>
 						<h1
 							className='tasks-manager__title'
 							onClick={this.onClick}>
@@ -76,14 +77,20 @@ class TasksManager extends React.Component {
 					</header>
 					<footer className='task__footer'>
 						<button
-							className='task__btn task__btn--start-stop'
-							onClick={() => this.handleStartStop(task.id)}>
-							start/stop
+							className={
+								task.isRunning
+									? 'task__btn task__btn--stop'
+									: 'task__btn task__btn--start'
+							}
+							onClick={() => this.handleStartStop(task.id)}
+							disabled={(this.intervalId && !task.isRunning) || task.isDone}>
+							{task.isRunning ? 'stop' : 'start'}
 						</button>
 						<button
-							className='task__btn task__btn--finish'
-							onClick={() => this.handleFinish(task.id)}>
-							zakończone
+							className={task.isDone ? 'task__btn task__btn--finished' : 'task__btn task__btn--finish'}
+							onClick={() => this.handleFinish(task.id)}
+							disabled={task.isDone}>
+							{task.isDone ? 'zakończone' : 'zakończ'}
 						</button>
 						<button
 							className='task__btn task__btn--remove'
@@ -119,7 +126,7 @@ class TasksManager extends React.Component {
 			isRemoved: false,
 		};
 
-		this.api.addData(data).then((resp) => {
+		this.api.add(data).then((resp) => {
 			if (resp.id) {
 				const newTask = resp;
 				this.setState((state) => {
@@ -134,64 +141,55 @@ class TasksManager extends React.Component {
 	handleStartStop(id) {
 		this.state.tasks.map((task) => {
 			if (task.id === id) {
-				const { isRunning, isDone } = task;
+				const { isRunning } = task;
 
-				if (!isDone) {
-					if (!isRunning) {
-						this.api
-							.updateData(id, { ...task, isRunning: true })
-							.then((resp) => {
-								if (resp) {
-									this.incrementTime(id, task);
-									this.changeState(id, { isRunning: true });
-								}
-							});
-					} else {
-						this.api
-							.updateData(id, { ...task, isRunning: false })
-							.then((resp) => {
-								if (resp) {
-									this.stopIncrementTime();
-									this.changeState(id, { isRunning: false });
-								}
-							});
-					}
+				if (!isRunning) {
+					this.api.update(id, { ...task, isRunning: true }).then((resp) => {
+						if (resp) {
+							this.incrementTime(id);
+							this.changeState(id, { isRunning: true });
+						}
+					});
+				} else {
+					this.api.update(id, { ...task, isRunning: false }).then((resp) => {
+						if (resp) {
+							this.stopIncrementTime();
+							this.changeState(id, { isRunning: false });
+						}
+					});
 				}
 			}
 		});
 	}
 
-	incrementTime(id, task) {
-		const { isDone } = task;
+	incrementTime(id) {
+		this.intervalId = setInterval(() => {
+			this.setState((state) => {
+				const newTasks = state.tasks.map((task) => {
+					if (task.id === id) {
+						return { ...task, time: task.time + 1 };
+					}
 
-		if (!isDone) {
-			this.intervalId = setInterval(() => {
-				this.setState((state) => {
-					const newTasks = state.tasks.map((task) => {
-						if (task.id === id) {
-							return { ...task, time: task.time + 1 };
-						}
-
-						return task;
-					});
-
-					return {
-						tasks: newTasks,
-					};
+					return task;
 				});
-			}, 1000);
-		}
+
+				return {
+					tasks: newTasks,
+				};
+			});
+		}, 1000);
 	}
 
 	stopIncrementTime() {
 		clearInterval(this.intervalId);
+		this.intervalId = false;
 	}
 
 	handleFinish(id) {
 		this.state.tasks.map((task) => {
 			if (task.id === id) {
 				this.api
-					.updateData(id, { ...task, isDone: true, isRunning: false })
+					.update(id, { ...task, isDone: true, isRunning: false })
 					.then((resp) => {
 						if (resp) {
 							this.changeState(id, { isDone: true, isRunning: false });
@@ -208,7 +206,7 @@ class TasksManager extends React.Component {
 				const { isDone } = task;
 
 				if (isDone) {
-					this.api.updateData(id, { ...task, isRemoved: true }).then((resp) => {
+					this.api.update(id, { ...task, isRemoved: true }).then((resp) => {
 						if (resp) {
 							this.changeState(id, { isRemoved: true });
 							this.hideDeletedTasks();

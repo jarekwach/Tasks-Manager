@@ -11,7 +11,7 @@
 	--color-white: #fafafa;
 	--color-dark: #001b2b;
 	--color-primary: #005a7b;
-	--color-hover: #0088ae;
+	--color-secondary: #0088ae;
 	--color-shadow: rgba(0, 0, 0, 0.5);
 }
 
@@ -78,7 +78,7 @@ body {
 		background-color: var(--color-white);
 
 		&:hover {
-			background-color: var(--color-hover);
+			background-color: var(--color-secondary);
 			color: var(--color-white);
 		}
 	}
@@ -127,14 +127,41 @@ body {
 
 	&__btn {
 		border: none;
-		border-radius: 8px;
+		border-radius: 15px;
 		margin: 1.1em;
-		padding: 0.8em 1.8em;
-		font-size: 1.6em;
+		padding: 1em 2em;
+		font-size: 1.8em;
 		transition: all 0.3s;
 
-		&:hover {
-			transform: scale(1.1);
+		&:hover:not(:disabled) {
+			transform: scale(1.05);
+		}
+
+		&--start:not(:disabled) {
+			&:hover {
+				background-color: greenyellow;
+			}
+		}
+
+		&--stop {
+			&:hover:not(:disabled) {
+				background-color: var(--color-secondary);
+				color: var(--color-white);
+			}
+		}
+
+		&--finish {
+			&:hover {
+				background-color: var(--color-primary);
+				color: var(--color-white);
+			}
+		}
+
+		&--remove {
+			&:hover:not(:disabled) {
+				background-color: tomato;
+				color: var(--color-white);
+			}
 		}
 	}
 }

@@ -10,7 +10,7 @@
   --color-white: #fafafa;
   --color-dark: #001b2b;
   --color-primary: #005a7b;
-  --color-hover: #0088ae;
+  --color-secondary: #0088ae;
   --color-shadow: rgba(0, 0, 0, 0.5);
 }
 
@@ -70,7 +70,7 @@ body {
   background-color: var(--color-white);
 }
 .form__submit-btn:hover {
-  background-color: var(--color-hover);
+  background-color: var(--color-secondary);
   color: var(--color-white);
 }
 
@@ -113,12 +113,27 @@ body {
 }
 .task__btn {
   border: none;
-  border-radius: 8px;
+  border-radius: 15px;
   margin: 1.1em;
-  padding: 0.8em 1.8em;
-  font-size: 1.6em;
+  padding: 1em 2em;
+  font-size: 1.8em;
   transition: all 0.3s;
 }
-.task__btn:hover {
-  transform: scale(1.1);
+.task__btn:hover:not(:disabled) {
+  transform: scale(1.05);
+}
+.task__btn--start:not(:disabled):hover {
+  background-color: greenyellow;
+}
+.task__btn--stop:hover:not(:disabled) {
+  background-color: var(--color-secondary);
+  color: var(--color-white);
+}
+.task__btn--finish:hover {
+  background-color: var(--color-primary);
+  color: var(--color-white);
+}
+.task__btn--remove:hover:not(:disabled) {
+  background-color: tomato;
+  color: var(--color-white);
 }/*# sourceMappingURL=main.css.map */

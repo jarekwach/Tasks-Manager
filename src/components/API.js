@@ -3,11 +3,11 @@ class API {
 		this.url = 'http://localhost:3005/data';
 	}
 
-	loadData() {
+	load() {
 		return this._fetch();
 	}
 
-	addData(data) {
+	add(data) {
 		const options = {
 			method: 'POST',
 			body: JSON.stringify(data),
@@ -19,12 +19,12 @@ class API {
 		return this._fetch(options);
 	}
 
-	removeData(id) {
+	remove(id) {
 		const options = { method: 'DELETE' };
 		return this._fetch(options, `/${id}`);
 	}
 
-	updateData(id, data) {
+	update(id, data) {
 		const options = {
 			method: 'PUT',
 			body: JSON.stringify(data),
