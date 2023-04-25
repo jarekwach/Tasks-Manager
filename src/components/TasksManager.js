@@ -16,11 +16,11 @@ class TasksManager extends React.Component {
 	componentDidMount() {
 		this.api.load().then((data) => {
 			this.sortTasks(data);
+			this.hideDeletedTasks();
 
 			this.setState({
 				tasks: data,
 			});
-			this.hideDeletedTasks();
 		});
 	}
 
@@ -70,7 +70,9 @@ class TasksManager extends React.Component {
 		const { tasks } = this.state;
 		return tasks.map((task) => {
 			return (
-				<li className='tasks__item task'>
+				<li
+					key={task.id}
+					className='tasks__item task'>
 					<header className='task__header'>
 						<h3 className='task__title'>{task.name}</h3>
 						<p className='task__time'>{this.convertTime(task.time)}</p>
@@ -87,7 +89,11 @@ class TasksManager extends React.Component {
 							{task.isRunning ? 'stop' : 'start'}
 						</button>
 						<button
-							className={task.isDone ? 'task__btn task__btn--finished' : 'task__btn task__btn--finish'}
+							className={
+								task.isDone
+									? 'task__btn task__btn--finished'
+									: 'task__btn task__btn--finish'
+							}
 							onClick={() => this.handleFinish(task.id)}
 							disabled={task.isDone}>
 							{task.isDone ? 'zakończone' : 'zakończ'}
@@ -112,6 +118,9 @@ class TasksManager extends React.Component {
 		const { task } = this.state;
 		if (task) {
 			this.addTask(task);
+			this.setState({
+				task: '',
+			});
 		} else {
 			alert('Wprowadź treść zadania!');
 		}
