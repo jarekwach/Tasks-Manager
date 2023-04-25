@@ -32,6 +32,7 @@ class TasksManager extends React.Component {
 			<section className='tasks-manager'>
 				<div className='tasks-manager__container container'>
 					<header className='tasks-manager__header'>
+					<i className='tasks-manager__ico fa-solid fa-list-check'></i>
 						<h1
 							className='tasks-manager__title'
 							onClick={this.onClick}>

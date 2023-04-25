@@ -3,7 +3,8 @@ import { createRoot } from 'react-dom/client';
 
 import TasksManager from './components/TasksManager';
 
-import './styles/main.css';
+import './styles/css/reset.css'
+import './styles/css/main.css';
 
 const App = () => <TasksManager />;
 

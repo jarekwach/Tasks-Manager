@@ -2,7 +2,7 @@
   "data": [
     {
       "name": "Zadanie 1",
-      "time": 110,
+      "time": 144,
       "isRunning": false,
       "isDone": false,
       "isRemoved": false,
@@ -10,7 +10,7 @@
     },
     {
       "name": "Zadanie 2",
-      "time": 90,
+      "time": 96,
       "isRunning": false,
       "isDone": false,
       "isRemoved": false,
@@ -31,14 +31,6 @@
       "isDone": false,
       "isRemoved": false,
       "id": 4
-    },
-    {
-      "name": "Zadanie 5",
-      "time": 8,
-      "isRunning": false,
-      "isDone": false,
-      "isRemoved": false,
-      "id": 5
     }
   ]
 }
