@@ -1,5 +1,7 @@
 import React from 'react';
 import API from './API';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faListCheck } from '@fortawesome/free-solid-svg-icons';
 
 class TasksManager extends React.Component {
 	constructor() {
@@ -33,7 +35,9 @@ class TasksManager extends React.Component {
 			<section className='tasks-manager'>
 				<div className='tasks-manager__container container'>
 					<header className='tasks-manager__header'>
-						<i className='tasks-manager__ico fa-solid fa-list-check'></i>
+						<i className='tasks-manager__ico'>
+							<FontAwesomeIcon icon={faListCheck} />
+						</i>
 						<h1
 							className='tasks-manager__title'
 							onClick={this.onClick}>
