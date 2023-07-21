@@ -1,5 +1,5 @@
 {
-  "name": "react-tasks-manager",
+  "name": "tasks-manager",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -9,7 +9,7 @@
     "build": "webpack --mode production"
   },
   "keywords": [],
-  "author": "",
+  "author": "jarekwach",
   "license": "ISC",
   "devDependencies": {
     "@babel/core": "^7.19.6",
