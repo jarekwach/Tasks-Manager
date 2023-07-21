@@ -3,7 +3,7 @@
 # Tasks Manager
 
 TasksManager is an application used to manage tasks, it allows you to add new tasks and count the time of their completion.
-The application was built in React using class components.. The tasks data is stored in a local database and retrieved using a local API (JSON Server).
+The application was built in React using class components. The tasks data is stored in a local database and retrieved using a local API (JSON Server).
 
 **Main features**:
 
