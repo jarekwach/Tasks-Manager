@@ -1,4 +1,4 @@
-![Tasks Manager](./assets/screen-desktop.png)
+![Tasks Manager](./assets/tasks-manager.gif)
 
 # Tasks Manager
 
@@ -30,6 +30,12 @@ The application was built in React using class components. The tasks data is sto
 ![Babel](https://img.shields.io/badge/Babel-F9DC3E?style=for-the-badge&logo=babel&logoColor=white)
 ![Node.js](https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=nodedotjs&logoColor=white)
 ![NPM](https://img.shields.io/badge/npm-CB3837?style=for-the-badge&logo=npm&logoColor=white)
+
+&nbsp;
+
+## :camera: Screenshots
+
+![Tasks Manager](./assets/screen-desktop.png)
 
 &nbsp;
 
